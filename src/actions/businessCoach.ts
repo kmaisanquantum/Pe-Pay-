@@ -104,9 +104,9 @@ export async function askBusinessCoach(
       ai_reply:                   reply,
       transaction_count_at_time:  txns.length,
       created_at:                 new Date().toISOString(),
-    }).then(({ error }) => { if (error) console.warn("[BusinessCoach] Log error:", error); });
+    }).then(({ error }: { error: any }) => { if (error) console.warn("[BusinessCoach] Log error:", error); });
 
-    const totalKina = txns.reduce((s, t) => s + (t.total_kina || 0), 0);
+    const totalKina = txns.reduce((s: number, t: any) => s + (t.total_kina || 0), 0);
     return { success: true, reply, context: { transactionCount: txns.length, totalKina, topItems } };
 
   } catch (err) {
