@@ -4,6 +4,7 @@ import { useState } from "react";
 import ReceiptScanner from "@/components/ReceiptScanner";
 import BusinessCoach from "@/components/BusinessCoach";
 import TransactionLedger from "@/components/TransactionLedger";
+import MerchantQR from "@/components/MerchantQR";
 import type { Transaction, Vendor, ExtractedReceipt } from "@/types";
 
 interface Props {
@@ -13,7 +14,7 @@ interface Props {
   transactionCount: number;
 }
 
-type Tab = "scanner" | "coach" | "ledger";
+type Tab = "scanner" | "coach" | "ledger" | "qr";
 
 export default function VendorDashboard({
   vendor,
@@ -38,6 +39,8 @@ export default function VendorDashboard({
       ocr_confidence: data.confidence,
       ocr_notes:      data.notes,
       source:         "receipt_scan",
+      type:           "IN",
+      is_digital:     false,
       created_at:     new Date().toISOString(),
     };
     setTxns((prev) => [newTxn, ...prev]);
@@ -49,6 +52,7 @@ export default function VendorDashboard({
     { id: "scanner", label: "Scanner",  icon: "📷" },
     { id: "coach",   label: "Coach",    icon: "💬" },
     { id: "ledger",  label: "Ledger",   icon: "📊" },
+    { id: "qr",      label: "My QR",    icon: "QR" },
   ];
 
   return (
@@ -95,14 +99,14 @@ export default function VendorDashboard({
                   : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
               }`}
             >
-              <span className="text-base leading-none">{tab.icon}</span>
+              <span className="text-base leading-none font-bold">{tab.icon}</span>
               <span>{tab.label}</span>
             </button>
           ))}
         </div>
 
         {/* Panels */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm min-h-[300px]">
           {activeTab === "scanner" && (
             <ReceiptScanner vendorId={vendor.id} onSaved={handleSaved} />
           )}
@@ -115,6 +119,12 @@ export default function VendorDashboard({
           )}
           {activeTab === "ledger" && (
             <TransactionLedger transactions={transactions} />
+          )}
+          {activeTab === "qr" && (
+            <MerchantQR
+              sevisId={vendor.sevis_id || ""}
+              businessName={vendor.business_name || vendor.full_name}
+            />
           )}
         </div>
 

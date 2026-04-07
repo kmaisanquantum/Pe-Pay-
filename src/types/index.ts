@@ -51,6 +51,7 @@ export interface Vendor {
   phone?: string;
   province?: string;
   market_name?: string;
+  sevis_id?: string;
   created_at: string;
 }
 
@@ -65,5 +66,7 @@ export interface Transaction {
   ocr_confidence?: "high" | "medium" | "low";
   ocr_notes?: string;
   source: string;
+  type: "IN" | "OUT";
+  is_digital: boolean;
   created_at: string;
 }
